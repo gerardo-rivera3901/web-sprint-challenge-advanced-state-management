@@ -1,39 +1,61 @@
-import React, {useState} from 'react'
-import { connect } from 'react-redux'
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { postSmurfs } from '../../actions';
 
-const initialValues = {
-  name: '',
-  age: '',
-  height: ''
-}
+const SmurfForm = (props) => {
+  const initialValues = props.smurf
+  const [formValues, setFormValues] = useState(initialValues)
 
-const onChange
+  const onChange = event => {
+      setFormValues({
+          ...formValues,
+          [event.target.name]: event.target.value,
+      })
+  }
 
-export const NewSmurf = () => {
-  const [text, setText] = useState(initialValues)
+  const onSubmit = () => {
+      props.postSmurfs(formValues)
+      setFormValues(initialValues)
+  }
+
   return (
-    <div style={{background: 'teal', marginLeft: '8%', marginRight: '8%', padding: '1rem', borderRadius: '15px', color: 'white'}}>
-      <h2>Create a Smurf!</h2>
-      <form>
-        <input 
-          style={{margin: '0.25rem'}}
-          type='text'
-          placeholder='Smurf Name'
-        /><br />
-        <input 
-          style={{margin: '0.25rem'}}
-          type='text'
-          placeholder='Smurf Age'
-        /><br />
-        <input 
-          style={{margin: '0.25rem'}}
-          type='text'
-          placeholder='Smurf Height'
-        /><br />
-        <button style={{margin: '0.25rem'}}>Submit</button>
-      </form>
-    </div>
+    <form onSubmit={onSubmit} style={{background: 'teal', marginLeft: '8%', marginRight: '8%', marginTop: '3%', padding: '1rem', borderRadius: '15px', color: 'white'}}>
+      <h2 style={{margin: '0.5rem'}}>Make A Smurf!</h2>
+      <input 
+        type='text'
+        name='name'
+        placeholder='Smurf Name'
+        value={formValues.name}
+        onChange={onChange}
+        style={{margin: '0.25rem'}}
+      /><br />
+      <input 
+        type='text'
+        name='age'
+        placeholder='Smurf Age'
+        value={formValues.age}
+        onChange={onChange}
+        style={{margin: '0.25rem'}}
+      /><br />
+      <input 
+        type='text'
+        name='height'
+        placeholder='Smurf Height'
+        value={formValues.height}
+        onChange={onChange}
+        style={{margin: '0.25rem'}}
+      /><br />
+      <button style={{margin: '0.25rem'}}>Add Smurf</button>
+    </form>
   )
 }
 
-export default connect(null, {})(NewSmurf)
+const mapStateToProps = (state) => {
+    return {
+        smurfs: state.smurfs,
+        smurf: state.smurf,
+        error: state.error
+    }
+}
+
+export default connect(mapStateToProps, {postSmurfs})(SmurfForm)
